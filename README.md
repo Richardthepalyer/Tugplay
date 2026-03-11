@@ -1,258 +1,76 @@
-let balance = Number(localStorage.getItem("balance")) || 1200
-let streak = Number(localStorage.getItem("streak")) || 0
-let lastDaily = Number(localStorage.getItem("lastDaily")) || 0
+# Tugplay
 
-const balanceEl = document.getElementById("balance")
+Tugplay is a browser-based casino style game website that runs entirely in the browser using HTML, CSS, and JavaScript.
 
-function updateBalance(){
-balanceEl.innerText = "Balance: $" + balance.toFixed(2)
-localStorage.setItem("balance",balance)
-}
+It works perfectly on GitHub Pages because it requires **no backend or server**.
 
-updateBalance()
+## Features
 
-/* Game Navigation */
+• Money system  
+• Daily rewards  
+• Head or Tails game  
+• Slots game  
+• Mines game  
+• Admin panel  
+• Mobile friendly UI  
+• Data saved with localStorage  
 
-function showGame(id){
-document.querySelectorAll(".game").forEach(g=>{
-g.classList.add("hidden")
-})
-document.getElementById(id).classList.remove("hidden")
-}
+---
 
-/* Coin Flip */
+# How To Upload To GitHub Pages
 
-function flipCoin(choice){
+### 1 Create Repository
 
-let bet = Number(document.getElementById("coinBet").value)
+Go to GitHub and create a repository named:
 
-if(bet < 1 || bet > balance){
-alert("Invalid Bet")
-return
-}
+tugplay
 
-let result = Math.random() < 0.5 ? "heads":"tails"
+---
 
-let coin = document.getElementById("coinDisplay")
+### 2 Upload Files
 
-coin.innerText = "..."
+Upload these files into the repository:
 
-setTimeout(()=>{
+index.html  
+style.css  
+script.js  
+README.md  
 
-if(result === "heads"){
-coin.innerText = "H"
-coin.style.color="blue"
-}else{
-coin.innerText = "T"
-coin.style.color="black"
-}
+---
 
-if(choice === result){
-let win = bet*2
-balance += bet
-document.getElementById("coinResult").innerText="You won $" + win
-}else{
-balance -= bet
-document.getElementById("coinResult").innerText="You lost $" + bet
-}
+### 3 Enable GitHub Pages
 
-updateBalance()
+Go to:
 
-},1000)
+Settings → Pages
 
-}
+Under **Source**
 
-/* Slots */
+Select:
 
-const symbols=["🍒","⭐","💎","🍀","7️⃣"]
+Main Branch
 
-function spinSlots(){
+---
 
-let bet = Number(document.getElementById("slotBet").value)
+### 4 Your Website
 
-if(bet <1 || bet > balance){
-alert("Invalid Bet")
-return
-}
+Your website will appear at:
 
-let r1 = symbols[Math.floor(Math.random()*symbols.length)]
-let r2 = symbols[Math.floor(Math.random()*symbols.length)]
-let r3 = symbols[Math.floor(Math.random()*symbols.length)]
+https://richardthepalyer.github.io/Tugplay/
 
-document.getElementById("r1").innerText=r1
-document.getElementById("r2").innerText=r2
-document.getElementById("r3").innerText=r3
+---
 
-let result="Lose"
+# Notes
 
-if(r1===r2 && r2===r3){
-balance += bet*3
-result="3 Match! 3x Win!"
-}
-else if(r1===r2 || r2===r3 || r1===r3){
-balance += bet*2
-result="2 Match! 2x Win!"
-}
-else{
-balance -= bet
-}
+All player data is saved locally using:
 
-document.getElementById("slotResult").innerText=result
+localStorage
 
-updateBalance()
-}
+This includes:
 
-/* Mines */
+• Balance  
+• Daily reward streak  
+• Last claim time  
+• Game progress  
 
-let mines=[]
-let safeClicks=0
-let mineBet=0
-let gameActive=false
-
-function startMines(){
-
-mineBet = Number(document.getElementById("mineBet").value)
-
-if(mineBet <1 || mineBet > balance){
-alert("Invalid Bet")
-return
-}
-
-mines=[]
-safeClicks=0
-gameActive=true
-
-while(mines.length<3){
-let m = Math.floor(Math.random()*25)
-if(!mines.includes(m)) mines.push(m)
-}
-
-const grid=document.getElementById("mineGrid")
-grid.innerHTML=""
-
-for(let i=0;i<25;i++){
-let tile=document.createElement("div")
-tile.className="tile"
-tile.onclick=()=>clickTile(tile,i)
-grid.appendChild(tile)
-}
-}
-
-function clickTile(tile,index){
-
-if(!gameActive) return
-
-if(mines.includes(index)){
-tile.classList.add("mine")
-balance -= mineBet
-gameActive=false
-document.getElementById("mineResult").innerText="BOOM! You lost."
-updateBalance()
-return
-}
-
-tile.classList.add("safe")
-safeClicks++
-
-let multi = Math.pow(1.08,safeClicks)
-
-document.getElementById("mineResult").innerText=
-"Multiplier: x"+multi.toFixed(2)
-
-}
-
-function cashOut(){
-
-if(!gameActive) return
-
-let multi = Math.pow(1.08,safeClicks)
-let win = mineBet*multi
-
-balance += win
-
-document.getElementById("mineResult").innerText=
-"Cashed out $" + win.toFixed(2)
-
-gameActive=false
-
-updateBalance()
-
-}
-
-/* Daily Reward */
-
-function claimDaily(){
-
-let now = Date.now()
-
-if(now-lastDaily < 86400000){
-alert("Come back later!")
-return
-}
-
-streak++
-
-let reward = 1200 + (streak*600)
-
-balance += reward
-
-lastDaily = now
-
-localStorage.setItem("streak",streak)
-localStorage.setItem("lastDaily",lastDaily)
-
-updateBalance()
-
-alert("Daily Reward: $" + reward)
-
-}
-
-/* Admin */
-
-document.getElementById("adminBtn").onclick=openAdmin
-
-document.getElementById("logo").ondblclick=openAdmin
-
-function openAdmin(){
-
-let pin = prompt("Enter Admin PIN")
-
-if(pin==="0721"){
-document.getElementById("adminPanel").classList.remove("hidden")
-}else{
-alert("Access Denied")
-}
-
-}
-
-function closeAdmin(){
-document.getElementById("adminPanel").classList.add("hidden")
-}
-
-function addMoney(){
-let amt = Number(document.getElementById("adminAmount").value)
-balance += amt
-updateBalance()
-}
-
-function setMoney(){
-let amt = Number(document.getElementById("adminAmount").value)
-balance = amt
-updateBalance()
-}
-
-function removeMoney(){
-let amt = Number(document.getElementById("adminAmount").value)
-balance -= amt
-updateBalance()
-}
-
-/* Daily Popup */
-
-document.getElementById("dailyBtn").onclick=()=>{
-document.getElementById("dailyPopup").classList.remove("hidden")
-}
-
-function closeDaily(){
-document.getElementById("dailyPopup").classList.add("hidden")
-}
+No data is stored on a server.
