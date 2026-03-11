@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tugplay</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+<h1>Tugplay</h1>
+<div class="balance">Balance: $<span id="balance">1200</span></div>
+<button id="dailyBtn">Daily Reward</button>
+</header>
+
+<nav>
+<button onclick="showGame('coin')">Head or Tails</button>
+<button onclick="showGame('slots')">Slots</button>
+<button onclick="showGame('mines')">Mines</button>
+</nav>
+
+<main>
+
+<!-- Coin Game -->
+<section id="coin" class="game">
+<h2>Head or Tails</h2>
+
+<div class="coin" id="coinAnim">🪙</div>
+
+<input id="coinBet" type="number" placeholder="Bet Amount">
+
+<div class="buttons">
+<button onclick="playCoin('heads')">Heads</button>
+<button onclick="playCoin('tails')">Tails</button>
+</div>
+
+<div id="coinResult"></div>
+</section>
+
+<!-- Slots -->
+<section id="slots" class="game hidden">
+<h2>Slots</h2>
+
+<div class="slots">
+<div id="slot1">🍒</div>
+<div id="slot2">🍒</div>
+<div id="slot3">🍒</div>
+</div>
+
+<input id="slotBet" type="number" placeholder="Bet Amount">
+
+<button onclick="spinSlots()">Spin</button>
+
+<div id="slotResult"></div>
+</section>
+
+<!-- Mines -->
+<section id="mines" class="game hidden">
+<h2>Mines</h2>
+
+<input id="mineBet" type="number" placeholder="Bet Amount">
+
+<button onclick="startMines()">Start Game</button>
+<button onclick="cashOut()">Cash Out</button>
+
+<div id="mineMultiplier">Multiplier: 1.00x</div>
+
+<div id="grid"></div>
+
+<div id="mineResult"></div>
+</section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
