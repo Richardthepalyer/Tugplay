@@ -7,16 +7,11 @@ margin:0;
 }
 
 header{
-background:#15151a;
-padding:15px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-}
-
-.balance{
-font-size:20px;
-color:#00ff90;
+background:#15151a;
+padding:10px;
 }
 
 nav{
@@ -26,30 +21,43 @@ padding:10px;
 
 nav button{
 margin:5px;
-padding:10px 20px;
+padding:10px;
 border:none;
+border-radius:6px;
 background:#2a2a35;
 color:white;
-border-radius:6px;
 cursor:pointer;
-}
-
-nav button:hover{
-background:#3b3b4a;
-}
-
-.game{
-padding:20px;
 }
 
 .hidden{
 display:none;
 }
 
+.center{
+margin-top:40px;
+}
+
 .coin{
-font-size:80px;
-margin:20px;
+width:120px;
+height:120px;
+margin:auto;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:50px;
+font-weight:bold;
 transition:transform 1s;
+}
+
+.heads{
+background:#2196f3;
+color:white;
+}
+
+.tails{
+background:black;
+color:white;
 }
 
 .coin.flip{
@@ -69,6 +77,10 @@ background:#1b1b22;
 padding:20px;
 border-radius:10px;
 width:80px;
+height:80px;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
 #grid{
@@ -84,41 +96,11 @@ width:60px;
 height:60px;
 background:#2a2a35;
 border-radius:6px;
-cursor:pointer;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:24px;
-}
-
-.tile:hover{
-background:#3a3a45;
-}
-
-.safe{
-background:#00b36b;
-}
-
-.mine{
-background:#ff3b3b;
-}
-
-input{
-padding:8px;
-margin:10px;
-border-radius:6px;
-border:none;
-}
-
-button{
-padding:10px 15px;
-border:none;
-border-radius:6px;
-background:#4c6fff;
-color:white;
 cursor:pointer;
 }
 
-button:hover{
-background:#6f8fff;
-}
+.safe{background:#00b36b;}
+.mine{background:#ff3b3b;}
