@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,31 +10,94 @@
 <body>
 
 <header>
-<h1>Tugplay</h1>
-<div class="balance">Balance: $<span id="balance">1200</span></div>
+<h1 id="title">Tugplay</h1>
+<div class="balance">Balance: $<span id="balance"></span></div>
 <button id="dailyBtn">Daily Reward</button>
 </header>
 
-<nav>
+<nav id="menu">
 <button onclick="showGame('coin')">Head or Tails</button>
 <button onclick="showGame('slots')">Slots</button>
 <button onclick="showGame('mines')">Mines</button>
 </nav>
 
+<!-- ADMIN PANEL -->
+<section id="adminLogin" class="hidden center">
+<h2>Admin Login</h2>
+<input id="adminPin" type="password" placeholder="Enter PIN">
+<button onclick="loginAdmin()">Enter</button>
+</section>
+
+<section id="adminPanel" class="hidden center">
+<h2>Admin Panel</h2>
+
+<input id="adminAmount" type="number" placeholder="Amount">
+
+<div class="adminButtons">
+<button onclick="adminAction(1)">Add Money</button>
+<button onclick="adminAction(2)">Set Money</button>
+<button onclick="adminAction(3)">Remove Money</button>
+<button onclick="adminAction(4)">Set Mines</button>
+</div>
+
+</section>
+
 <main>
 
-<!-- Coin Game -->
+<!-- COIN -->
 <section id="coin" class="game">
 <h2>Head or Tails</h2>
 
-<div class="coin" id="coinAnim">🪙</div>
+<div id="coinAnim" class="coin heads">H</div>
 
-<input id="coinBet" type="number" placeholder="Bet Amount">
+<input id="coinBet" type="number" placeholder="Bet">
 
-<div class="buttons">
+<div>
 <button onclick="playCoin('heads')">Heads</button>
 <button onclick="playCoin('tails')">Tails</button>
 </div>
+
+<div id="coinResult"></div>
+</section>
+
+<!-- SLOTS -->
+<section id="slots" class="game hidden">
+<h2>Slots</h2>
+
+<div class="slots">
+<div id="slot1">🍒</div>
+<div id="slot2">🍋</div>
+<div id="slot3">⭐</div>
+</div>
+
+<input id="slotBet" type="number" placeholder="Bet">
+
+<button onclick="spinSlots()">Spin</button>
+
+<div id="slotResult"></div>
+</section>
+
+<!-- MINES -->
+<section id="mines" class="game hidden">
+<h2>Mines</h2>
+
+<input id="mineBet" type="number" placeholder="Bet">
+
+<button onclick="startMines()">Start</button>
+<button onclick="cashOut()">Cash Out</button>
+
+<div id="mineMultiplier">Multiplier: 1.00x</div>
+
+<div id="grid"></div>
+
+<div id="mineResult"></div>
+</section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html></div>
 
 <div id="coinResult"></div>
 </section>
