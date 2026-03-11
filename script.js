@@ -1,12 +1,6 @@
-// --------------------
 // MONEY SYSTEM
-// --------------------
-
 let balance = parseInt(localStorage.getItem("balance")) || 1200
-let streak = parseInt(localStorage.getItem("streak")) || 0
-let lastClaim = parseInt(localStorage.getItem("lastClaim")) || 0
-
-const balanceDisplay = document.getElementById("balance")
+let balanceDisplay = document.getElementById("balance")
 
 function updateBalance(){
 balanceDisplay.textContent = balance
@@ -15,43 +9,67 @@ localStorage.setItem("balance",balance)
 
 updateBalance()
 
-// --------------------
-// DAILY REWARD
-// --------------------
+// ADMIN DOUBLE CLICK
+document.getElementById("title").ondblclick = () => {
 
-document.getElementById("dailyBtn").onclick = () => {
+document.getElementById("menu").classList.add("hidden")
+document.getElementById("adminLogin").classList.remove("hidden")
 
-let now = Date.now()
-
-if(now - lastClaim < 43200000){
-alert("Daily already claimed")
-return
 }
 
-let daysMissed = Math.floor((now - lastClaim) / 86400000)
+// ADMIN LOGIN
+function loginAdmin(){
 
-if(daysMissed > 1) streak = 0
+let pin = document.getElementById("adminPin").value
 
-streak++
+if(pin === "2107"){
 
-let reward = 1200 + (streak-1)*600
+document.getElementById("adminLogin").classList.add("hidden")
+document.getElementById("adminPanel").classList.remove("hidden")
 
-balance += reward
+}else{
 
-lastClaim = now
+alert("Wrong PIN")
 
-localStorage.setItem("streak",streak)
-localStorage.setItem("lastClaim",lastClaim)
+}
+
+}
+
+// ADMIN ACTIONS
+let minesCount = 3
+
+function adminAction(type){
+
+let amount = parseInt(document.getElementById("adminAmount").value)
+
+if(type === 1){
+balance += amount
+}
+
+if(type === 2){
+balance = amount
+}
+
+if(type === 3){
+balance -= amount
+}
+
+if(type === 4){
+
+if(amount >=3 && amount <=24){
+
+minesCount = amount
+alert("Mines set to "+amount)
+
+}
+
+}
 
 updateBalance()
 
-alert("You received $" + reward)
 }
 
-// --------------------
 // GAME SWITCH
-// --------------------
-
 function showGame(id){
 
 document.querySelectorAll(".game").forEach(g=>{
@@ -62,42 +80,39 @@ document.getElementById(id).classList.remove("hidden")
 
 }
 
-// --------------------
-// COIN GAME
-// --------------------
-
+// COIN
 function playCoin(choice){
 
 let bet = parseInt(document.getElementById("coinBet").value)
+if(bet > balance) return alert("Not enough")
 
-if(!bet || bet < 1 || bet > 1000000){
-alert("Invalid bet")
-return
-}
+let coin = document.getElementById("coinAnim")
 
-if(bet > balance){
-alert("Not enough money")
-return
-}
-
-const coin = document.getElementById("coinAnim")
 coin.classList.add("flip")
 
 setTimeout(()=>{
 
 coin.classList.remove("flip")
 
-let result = Math.random() < 0.5 ? "heads":"tails"
+let result = Math.random() < .5 ? "heads":"tails"
 
-if(result === choice){
+if(result==="heads"){
+coin.className="coin heads"
+coin.textContent="H"
+}else{
+coin.className="coin tails"
+coin.textContent="T"
+}
+
+if(choice===result){
 
 balance += bet
-document.getElementById("coinResult").textContent = "You won!"
+document.getElementById("coinResult").textContent="You Won"
 
 }else{
 
 balance -= bet
-document.getElementById("coinResult").textContent = "You lost!"
+document.getElementById("coinResult").textContent="You Lost"
 
 }
 
@@ -107,90 +122,83 @@ updateBalance()
 
 }
 
-// --------------------
 // SLOTS
-// --------------------
-
-const symbols = ["🍒","🍋","⭐","💎","7️⃣"]
+const symbols=["🍒","🍋","⭐","💎","7️⃣"]
 
 function spinSlots(){
 
-let bet = parseInt(document.getElementById("slotBet").value)
+let bet=parseInt(document.getElementById("slotBet").value)
 
-if(!bet || bet < 1 || bet > 1000000){
-alert("Invalid bet")
-return
-}
+if(bet>balance) return alert("Not enough")
 
-if(bet > balance){
-alert("Not enough money")
-return
-}
+let reels=[slot1,slot2,slot3]
 
-let s1 = symbols[Math.floor(Math.random()*symbols.length)]
-let s2 = symbols[Math.floor(Math.random()*symbols.length)]
-let s3 = symbols[Math.floor(Math.random()*symbols.length)]
+let spin=setInterval(()=>{
 
-document.getElementById("slot1").textContent = s1
-document.getElementById("slot2").textContent = s2
-document.getElementById("slot3").textContent = s3
+reels.forEach(r=>{
+r.textContent=symbols[Math.floor(Math.random()*symbols.length)]
+})
 
-if(s1 === s2 && s2 === s3){
+},100)
+
+setTimeout(()=>{
+
+clearInterval(spin)
+
+let s1=slot1.textContent
+let s2=slot2.textContent
+let s3=slot3.textContent
+
+if(s1===s2 && s2===s3){
 
 balance += bet*2
-document.getElementById("slotResult").textContent = "Jackpot! 3x"
+slotResult.textContent="3 MATCH! 3x"
 
 }
 
 else if(s1===s2 || s2===s3 || s1===s3){
 
 balance += bet
-document.getElementById("slotResult").textContent = "2 Match! 2x"
+slotResult.textContent="2 MATCH! 2x"
 
 }
 
 else{
 
 balance -= bet
-document.getElementById("slotResult").textContent = "You lost"
+slotResult.textContent="Lost"
 
 }
 
 updateBalance()
 
+},1500)
+
 }
 
-// --------------------
 // MINES
-// --------------------
-
 let mines=[]
 let mineBet=0
 let multiplier=1
-let safeClicks=0
 let gameActive=false
 
 function startMines(){
 
-mineBet = parseInt(document.getElementById("mineBet").value)
+mineBet=parseInt(document.getElementById("mineBet").value)
 
-if(!mineBet || mineBet < 1 || mineBet > balance){
-alert("Invalid bet")
-return
-}
+if(mineBet>balance) return alert("Not enough")
 
-balance -= mineBet
+balance-=mineBet
 updateBalance()
 
 multiplier=1
-safeClicks=0
 gameActive=true
 
 mines=[]
 
-while(mines.length < 3){
+while(mines.length < minesCount){
 
-let m = Math.floor(Math.random()*25)
+let m=Math.floor(Math.random()*25)
 
 if(!mines.includes(m)) mines.push(m)
 
@@ -202,12 +210,12 @@ createGrid()
 
 function createGrid(){
 
-const grid = document.getElementById("grid")
+let grid=document.getElementById("grid")
 grid.innerHTML=""
 
 for(let i=0;i<25;i++){
 
-let tile = document.createElement("div")
+let tile=document.createElement("div")
 tile.className="tile"
 
 tile.onclick=()=>clickTile(tile,i)
@@ -229,7 +237,7 @@ tile.classList.add("mine")
 
 gameActive=false
 
-document.getElementById("mineResult").textContent="Boom! You lost."
+mineResult.textContent="Boom!"
 
 return
 
@@ -238,12 +246,9 @@ return
 tile.textContent="💎"
 tile.classList.add("safe")
 
-safeClicks++
+multiplier *= (1.08 + (minesCount-3)*0.08)
 
-multiplier*=1.08
-
-document.getElementById("mineMultiplier").textContent =
-"Multiplier: "+multiplier.toFixed(2)+"x"
+mineMultiplier.textContent="Multiplier: "+multiplier.toFixed(2)+"x"
 
 }
 
@@ -251,14 +256,13 @@ function cashOut(){
 
 if(!gameActive) return
 
-let winnings = Math.floor(mineBet * multiplier)
+let win=Math.floor(mineBet*multiplier)
 
-balance += winnings
+balance+=win
 
 updateBalance()
 
-document.getElementById("mineResult").textContent =
-"Cashed out $" + winnings
+mineResult.textContent="Cashed $"+win
 
 gameActive=false
 
